@@ -31,4 +31,4 @@ jobs:
             fi
             cd /home/devops/src
             git pull origin main
-            docker-compose -f docker-compose.prod.yaml up --build -d
+            docker compose -f docker-compose.prod.yaml up --build -d
