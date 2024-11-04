@@ -25,4 +25,10 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script: whoami
+          script: |
+            if [ ! -d "/home/devops/src" ]; then
+              git clone git@github.com:hrz8/archipelago.git /home/devops/src
+            fi
+            cd /home/devops/src
+            git pull origin main
+            docker-compose -f docker-compose.prod.yaml up --build -d
