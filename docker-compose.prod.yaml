@@ -2,11 +2,19 @@ version: '3.8'
 
 services:
   traefik:
-    image: traefik:v3.1
+    image: traefik:v3.2
     container_name: traefik
     command:
       - "--api.insecure=true"
       - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.apresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.apresolver.acme.email=hirzinurfakhrian@gmail.com"
+      - "--certificatesresolvers.apresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
     ports:
       - "80:80"
       - "8080:8080"
@@ -22,4 +30,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.chat.rule=Host(`archipelago.altalune.id`)"
+      - "traefik.http.routers.chat.entrypoints=websecure"
+      - "traefik.http.routers.chat.tls.certresolver=apresolver"
     command: ["serve"]
+
+volumes:
+  letsencrypt:

@@ -1,9 +1,9 @@
 <template>
   <div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="card w-50">
+    <div class="card w-75">
       <div class="card-body">
         <h5 class="card-title text-center">{{ `Hey ${meKey}, ${chatTitle}` }}</h5>
-        <div ref="scrollable" class="chat-window" style="height: 300px; overflow-y: auto;">
+        <div ref="scrollable" class="chat-window" :style="{ height: isMobile ? '80vh' : '400px' }" style="overflow-y: auto;">
           <div v-for="(message, index) in messages" :key="index" class="mb-3 d-flex" :class="{'justify-content-end': message.sender === 'me', 'justify-content-start': message.sender !== 'me'}">
             <div :class="['chat-bubble', message.sender === 'me' ? 'bg-primary text-white' : 'bg-secondary text-white']">
               <small>{{ message.sender === 'me' ? 'You' : 'Other Person' }}:</small>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick, computed } from 'vue';
 
 export default {
   name: 'ChatWindow',
@@ -40,6 +40,11 @@ export default {
     const meKey = ref(null);
     const isRoomFull = ref(false);
     let ws;
+
+    const isMobile = computed(() => {
+      console.log(window.innerWidth);
+      return window.innerWidth < 768;
+    });
 
     const scrollToBottom = () => {
       if (scrollable.value) {
@@ -93,6 +98,7 @@ export default {
 
     return {
       scrollable,
+      isMobile,
       messages,
       messageText,
       chatTitle,
@@ -106,7 +112,6 @@ export default {
 
 <style scoped>
 .chat-window {
-  max-height: 400px;
   overflow-y: auto;
   border: 1px solid #ddd;
   padding: 15px;
