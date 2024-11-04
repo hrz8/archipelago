@@ -19,17 +19,7 @@ services:
       dockerfile: Dockerfile
     restart: on-failure
     container_name: chat
-    expose:
-      - "8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.chat.rule=Host(`archipelago.altalune.id`)"
     command: ["serve"]
-
-  nginx:
-    image: nginx
-    container_name: nginx
-    restart: always
-    ports:
-      - "8080:80"
-    volumes:
-      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - chat
