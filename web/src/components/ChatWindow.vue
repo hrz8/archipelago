@@ -48,7 +48,7 @@ export default {
     }
 
     const initializeWebSocket = () => {
-      ws = new WebSocket('ws://localhost:8080/chat');
+      ws = new WebSocket('ws://localhost:8080/ws');
 
       ws.onmessage = (event) => {
         const message = event.data;
